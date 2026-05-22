@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get install -y shellcheck
+      - name: Lint bootstrap.sh
+        run: shellcheck -S warning bootstrap.sh
+      - name: Lint hook scripts
+        run: |
+          for f in boilerplate/.claude/hooks/*.sh; do
+            echo "Checking $f"
+            shellcheck -S warning "$f"
+          done
+
+  test-bootstrap:
+    name: Test bootstrap script
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run bootstrap in temp dir
+        run: |
+          mkdir -p /tmp/test-project
+          cp bootstrap.sh /tmp/test-project/
+          cd /tmp/test-project
+          echo "y" | bash bootstrap.sh test-project
+
+      - name: Verify critical files exist
+        run: |
+          cd /tmp/test-project
+          test -f CLAUDE.md              || (echo "MISSING: CLAUDE.md" && exit 1)
+          test -f .claude/settings.json  || (echo "MISSING: settings.json" && exit 1)
+          test -f .claude/hooks/pre-tool-use.sh   || (echo "MISSING: pre-tool-use.sh" && exit 1)
+          test -f .claude/hooks/post-tool-use.sh  || (echo "MISSING: post-tool-use.sh" && exit 1)
+          test -f .claude/agents/reviewer.md      || (echo "MISSING: reviewer.md" && exit 1)
+          test -f .claude/commands/review.md      || (echo "MISSING: review.md" && exit 1)
+          test -f .mcp/mcp.json                   || (echo "MISSING: mcp.json" && exit 1)
+          test -f .env.example                    || (echo "MISSING: .env.example" && exit 1)
+          echo "All critical files present ✓"
+
+      - name: Verify hooks are executable
+        run: |
+          cd /tmp/test-project
+          test -x .claude/hooks/pre-tool-use.sh  || (echo "NOT EXECUTABLE: pre-tool-use.sh" && exit 1)
+          test -x .claude/hooks/post-tool-use.sh || (echo "NOT EXECUTABLE: post-tool-use.sh" && exit 1)
+          test -x .claude/hooks/notification.sh  || (echo "NOT EXECUTABLE: notification.sh" && exit 1)
+          test -x .claude/hooks/stop.sh          || (echo "NOT EXECUTABLE: stop.sh" && exit 1)
+          echo "All hooks executable ✓"
+
+      - name: Verify project name substitution
+        run: |
+          cd /tmp/test-project
+          grep -q "test-project" CLAUDE.md || (echo "Project name not substituted in CLAUDE.md" && exit 1)
+          echo "Project name substitution ✓"
+
+  validate-json:
+    name: Validate JSON files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run bootstrap to generate files
+        run: |
+          mkdir -p /tmp/json-test
+          cp bootstrap.sh /tmp/json-test/
+          cd /tmp/json-test
+          echo "y" | bash bootstrap.sh json-test
+      - name: Validate settings.json
+        run: python3 -c "import json; json.load(open('/tmp/json-test/.claude/settings.json'))" && echo "settings.json valid ✓"
+      - name: Validate mcp.json
+        run: python3 -c "import json; json.load(open('/tmp/json-test/.mcp/mcp.json'))" && echo "mcp.json valid ✓"

@@ -1,0 +1,12 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+/tmp/
+*.log
+
+# Editor
+.vscode/settings.json
+.idea/
+*.swp

@@ -1,0 +1,52 @@
+name: Bug report
+description: Something broken in the bootstrap script or generated files
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to report a bug.
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS
+        - Linux (Ubuntu/Debian)
+        - Linux (other)
+        - Windows (WSL)
+    validations:
+      required: true
+
+  - type: input
+    id: bash-version
+    attributes:
+      label: Bash version
+      description: Run `bash --version` and paste the first line
+      placeholder: GNU bash, version 5.2.15(1)-release
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Run `bash bootstrap.sh my-project`
+        2. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour — include the full error output
+    validations:
+      required: true

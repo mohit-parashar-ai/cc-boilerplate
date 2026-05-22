@@ -1,0 +1,40 @@
+name: Feature request
+description: Suggest a new agent, command, skill, hook behaviour, or config option
+labels: [enhancement]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - New agent
+        - New slash command
+        - New skill
+        - Hook behaviour
+        - MCP server
+        - settings.json option
+        - CLAUDE.md section
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      placeholder: When working on X I always have to manually do Y...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      placeholder: Add a /deploy command that...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
