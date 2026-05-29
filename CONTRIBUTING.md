@@ -13,8 +13,8 @@ Contributions are welcome — new agents, commands, skills, hook behaviours, sta
 ## Development setup
 
 ```bash
-git clone https://github.com/mohitparshar/claude-code-boilerplate
-cd claude-code-boilerplate
+git clone https://github.com/mohit-parashar-ai/cc-boilerplate
+cd cc-boilerplate
 ```
 
 Test your changes:
@@ -26,7 +26,7 @@ echo "y" | bash bootstrap.sh test-project
 Lint:
 ```bash
 shellcheck -S warning bootstrap.sh
-shellcheck -S warning boilerplate/.claude/hooks/*.sh
+shellcheck -S warning .claude/hooks/*.sh
 ```
 
 ## Adding a new slash command

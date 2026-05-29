@@ -22,7 +22,7 @@ jobs:
           cd /tmp/release
           echo "y" | bash bootstrap.sh my-project
           rm bootstrap.sh
-          zip -r ../claude-code-boilerplate-${{ github.ref_name }}.zip . \
+          zip -r ../cc-boilerplate-${{ github.ref_name }}.zip . \
             --exclude "*.DS_Store"
 
       - name: Create release
@@ -32,6 +32,6 @@ jobs:
           body_path: CHANGELOG.md
           files: |
             bootstrap.sh
-            claude-code-boilerplate-${{ github.ref_name }}.zip
+            cc-boilerplate-${{ github.ref_name }}.zip
           draft: false
           prerelease: false

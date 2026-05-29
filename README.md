@@ -38,7 +38,7 @@ No other dependencies. The script is self-contained and only uses standard Unix 
 
 ```bash
 # 1. Download the script
-curl -O https://raw.githubusercontent.com/your-org/claude-code-boilerplate/main/bootstrap.sh
+curl -O https://raw.githubusercontent.com/mohit-parashar-ai/cc-boilerplate/main/bootstrap.sh
 
 # 2. Run it inside your project directory
 cd your-project
